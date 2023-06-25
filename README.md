@@ -9,9 +9,9 @@ This repo implements both software and hardware version of Smith Waterman algori
 ### hardware
 * results after synthesis are too large to be uploaded
 * you can only check RTL design
-  > source license.sh
-  > vcs tb_SW.v +define+SW+RTL -full64 -R -debug_access+all +v2k +notimingcheck  
-  > vcs tb_SW.v +define+SW_v2+RTL -full64 -R -debug_access+all +v2k +notimingcheck  
+  > 1. source license.sh 
+  > 2. vcs tb_SW.v +define+SW+RTL -full64 -R -debug_access+all +v2k +notimingcheck(for SW.v)    
+  > 3. vcs tb_SW.v +define+SW_v2+RTL -full64 -R -debug_access+all +v2k +notimingcheck(for SW_v2.v)    
 * there are two designs in this repo
   1. simply use 256 PEs for alignment of two sequences both with 256 genomes
   2. use 128 PEs with a buffer
