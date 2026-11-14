@@ -1,0 +1,7 @@
+__pycache__/
+*.vvp
+*.fsdb
+csrc/
+simv*
+ucli.key
+*.log
