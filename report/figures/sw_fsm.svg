@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="560" viewBox="0 0 1180 560"><defs><marker id="ar_c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c0392b"/></marker><marker id="ar_b0601a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#b0601a"/></marker><marker id="ar_2b2b2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b2b2b"/></marker></defs><rect width="100%" height="100%" fill="#ffffff"/><text x="590" y="24" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" font-weight="bold" fill="#111">Control FSM and traceback FSM</text>
+<text x="250" y="62" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#8e4a87">control FSM</text>
+<circle cx="90" cy="150" r="42" fill="#f3e1f0" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="90" y="155" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">IDLE</text>
+<circle cx="250" cy="150" r="42" fill="#f3e1f0" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="250" y="155" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">RUN</text>
+<circle cx="410" cy="150" r="42" fill="#f3e1f0" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="410" y="155" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">TB</text>
+<circle cx="250" cy="330" r="42" fill="#f3e1f0" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="250" y="335" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">DONE</text>
+<path d="M132 150 Q170 120 208 150" fill="none" stroke="#2b2b2b" stroke-width="1.5" marker-end="url(#ar_2b2b2b)"/>
+<text x="170" y="118" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#2b2b2b">valid</text>
+<path d="M292 150 Q330 120 368 150" fill="none" stroke="#2b2b2b" stroke-width="1.5" marker-end="url(#ar_2b2b2b)"/>
+<text x="330" y="108" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#2b2b2b">last cell</text>
+<text x="330" y="121" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#2b2b2b">left PE P-1</text>
+<path d="M410 192 Q400 290 290 320" fill="none" stroke="#2b2b2b" stroke-width="1.5" marker-end="url(#ar_2b2b2b)"/>
+<text x="420" y="270" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#2b2b2b">traceback</text>
+<text x="420" y="283" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#2b2b2b">done</text>
+<path d="M210 320 Q100 300 90 192" fill="none" stroke="#2b2b2b" stroke-width="1.5" marker-end="url(#ar_2b2b2b)"/>
+<text x="100" y="290" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="end" font-weight="normal" fill="#2b2b2b">(finish = 1)</text>
+<text x="250" y="423.225" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="normal" fill="#333">RUN: S/T stream into PE0, PEs compute</text>
+<text x="250" y="436.975" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="normal" fill="#333">(pass 0 already while loading)</text>
+<text x="250" y="450.725" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="normal" fill="#333">TB: traceback FSM busy, ops on aln_valid/aln_op</text>
+<text x="250" y="464.475" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="normal" fill="#333">DONE: finish pulse, outputs held</text>
+<line x1="530" y1="50" x2="530" y2="530" stroke="#ccc" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="840" y="62" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#8e4a87">traceback FSM  (one op per cycle, starts at the best cell)</text>
+<circle cx="850" cy="230" r="48" fill="#f3e1f0" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="850" y="230" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">H</text>
+<text x="850" y="247" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="9" text-anchor="middle" font-weight="normal" fill="#444">in H matrix</text>
+<circle cx="650" cy="390" r="44" fill="#f3e1f0" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="650" y="390" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">E</text>
+<text x="650" y="407" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="9" text-anchor="middle" font-weight="normal" fill="#444">gap in S</text>
+<circle cx="1050" cy="390" r="44" fill="#f3e1f0" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="1050" y="390" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">F</text>
+<text x="1050" y="407" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="9" text-anchor="middle" font-weight="normal" fill="#444">gap in T</text>
+<circle cx="850" cy="110" r="30" fill="#f6f6f6" stroke="#8e4a87" stroke-width="1.8"/>
+<text x="850" y="115" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">stop</text>
+<path d="M890 204 C 970 160 980 260 898 238" fill="none" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ar_c0392b)"/>
+<text x="985" y="208" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#c0392b">hsrc = DIAG</text>
+<text x="985" y="222" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#c0392b">op M / X, i--, j--</text>
+<path d="M850 182 Q850 160 850 142" fill="none" stroke="#2b2b2b" stroke-width="1.5" marker-end="url(#ar_2b2b2b)"/>
+<text x="840" y="172" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="end" font-weight="normal" fill="#333">H = 0 (STOP), i &lt; 0, j &lt; 0</text>
+<path d="M802 230 Q640 220 638 347" fill="none" stroke="#b0601a" stroke-width="1.5" marker-end="url(#ar_b0601a)"/>
+<text x="610" y="260" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="end" font-weight="normal" fill="#b0601a">hsrc = LEFT</text>
+<text x="610" y="273" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="end" font-weight="normal" fill="#b0601a">and e_ext = 1</text>
+<path d="M898 230 Q1060 220 1062 347" fill="none" stroke="#b0601a" stroke-width="1.5" marker-end="url(#ar_b0601a)"/>
+<text x="1090" y="260" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b0601a">hsrc = UP</text>
+<text x="1090" y="273" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b0601a">and f_ext = 1</text>
+<path d="M682 360 Q730 350 818 266" fill="none" stroke="#2b2b2b" stroke-width="1.5" marker-end="url(#ar_2b2b2b)"/>
+<text x="788" y="328" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#2b2b2b">e_ext = 0 :</text>
+<text x="788" y="341" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#2b2b2b">op I, j--</text>
+<path d="M1018 360 Q970 350 882 266" fill="none" stroke="#2b2b2b" stroke-width="1.5" marker-end="url(#ar_2b2b2b)"/>
+<text x="912" y="328" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="end" font-weight="normal" fill="#2b2b2b">f_ext = 0 :</text>
+<text x="912" y="341" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="end" font-weight="normal" fill="#2b2b2b">op D, i--</text>
+<text x="850" y="389" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#333">in state H, gap not extended further:</text>
+<text x="850" y="401.5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#333">hsrc = LEFT, e_ext = 0 : op I, j--, stay H</text>
+<text x="850" y="414" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#333">hsrc = UP,   f_ext = 0 : op D, i--, stay H</text>
+<path d="M670 430 C 690 500 610 500 630 430" fill="none" stroke="#b0601a" stroke-width="1.5" marker-end="url(#ar_b0601a)"/>
+<text x="650" y="502" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#b0601a">e_ext = 1 : op I, j--, stay</text>
+<path d="M1030 430 C 1010 500 1090 500 1070 430" fill="none" stroke="#b0601a" stroke-width="1.5" marker-end="url(#ar_b0601a)"/>
+<text x="1050" y="502" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#b0601a">f_ext = 1 : op D, i--, stay</text>
+<rect x="720" y="472" width="260" height="70" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+<text x="850" y="490" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="11" text-anchor="middle" font-weight="bold" fill="#111">pointer = {hsrc[1:0], e_ext, f_ext}</text>
+<text x="850" y="508" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="10" text-anchor="middle" font-weight="normal" fill="#111">hsrc: 0 STOP  1 DIAG  2 UP(F)  3 LEFT(E)</text>
+<text x="850" y="526" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="10" text-anchor="middle" font-weight="normal" fill="#111">op:   0 M  1 X  2 I(gap in S)  3 D(gap in T)</text></svg>

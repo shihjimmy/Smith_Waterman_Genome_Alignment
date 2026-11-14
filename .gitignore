@@ -1,0 +1,10 @@
+__pycache__/
+*.vvp
+*.fsdb
+csrc/
+simv*
+ucli.key
+*.log
+*.vcd
+testbench/tb_result.txt
+testbench/tb_ops.txt
