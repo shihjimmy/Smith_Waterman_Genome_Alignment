@@ -1,0 +1,6 @@
+# Language statistics (GitHub Linguist): count only the Verilog RTL/testbench.
+*.py  linguist-detectable=false
+*.sh  linguist-detectable=false
+*.tcl linguist-detectable=false
+*.sdc linguist-detectable=false
+*.v   linguist-language=Verilog linguist-detectable=true
