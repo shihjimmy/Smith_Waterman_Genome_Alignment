@@ -25,8 +25,8 @@
 //              strictly better than open.
 //============================================================================
 module SW #(
-    parameter L      = 256,               // sequence length (power of 2)
-    parameter NUM_PE = 256,               // number of PEs, L % NUM_PE == 0 (power of 2)
+    parameter L      = 256,               // sequence length
+    parameter NUM_PE = 256,               // number of PEs, must divide L (power of 2 recommended)
     // derived widths -- do not override
     parameter IW     = (L > 1) ? $clog2(L) : 1,       // index width
     parameter DW     = $clog2(8 * L + 1) + 1          // signed score width (8L fits)
@@ -100,6 +100,7 @@ module SW #(
     wire [IW-1:0] rd_col = tb_j[IW-1:0];
     wire [IW-1:0] rd_pe  = rd_row % NUM_PE;
     wire [QW-1:0] rd_q   = rd_row / NUM_PE;
+    wire [QW+IW-1:0] rd_addr = rd_q * L + rd_col;       // pointer-bank address = pass*L + col
 
     wire clr = (state_r == S_DONE);
 
@@ -119,7 +120,7 @@ module SW #(
                 .clk(clk), .reset(reset), .clr(clr),
                 .tok_in(tok[p]), .s_load(s_load), .best_in(best[p]),
                 .tok_out(tok[p+1]), .best_out(best[p+1]),
-                .rd_addr({rd_q, rd_col}), .rd_ptr(rd_ptr[p])
+                .rd_addr(rd_addr), .rd_ptr(rd_ptr[p])
             );
         end
     endgenerate
@@ -258,7 +259,7 @@ module SW_PE #(
     reg  [BW-1:0]        best_r;
     localparam AW = (Q * L > 1) ? $clog2(Q * L) : 1;
     reg  [3:0]           tbm [0:Q*L-1];      // traceback pointer bank, address = q*L + col
-    wire [AW-1:0]        wr_addr = (Q == 1) ? col : {q, col};
+    wire [AW-1:0]        wr_addr = q * L + col;
 
     // ---- cell computation
     wire [1:0]           s_cur  = first ? s_load : s_r;

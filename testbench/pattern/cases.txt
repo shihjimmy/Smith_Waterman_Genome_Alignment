@@ -1,0 +1,28 @@
+case000 legacy s1.dat                    score  593 end (245,255)  start (0,4)      ops 298
+case001 legacy s2.dat                    score  592 end (255,238)  start (0,1)      ops 289
+case002 identical                        score 2048 end (255,255)  start (0,0)      ops 256
+case003 all mismatch                     score    0 end (0,0)      start (1,1)      ops 0
+case004 unrelated random                 score  600 end (254,223)  start (6,2)      ops 283
+case005 5% subst + small indels          score 1720 end (250,255)  start (1,1)      ops 258
+case006 long gaps                        score 1878 end (253,255)  start (0,0)      ops 266
+case007 local region                     score  979 end (255,207)  start (33,2)     ops 244
+case008 20% subst + indels               score 1156 end (247,255)  start (0,0)      ops 269
+case009 shifted copy                     score 2024 end (252,255)  start (0,3)      ops 253
+case010 low complexity                   score 1629 end (250,255)  start (0,0)      ops 264
+case011 motif in the middle              score  256 end (95,98)    start (64,67)    ops 32
+case012 motif at the start (0,0)         score  256 end (31,31)    start (0,0)      ops 32
+case013 motif at the end (L-1,L-1)       score  256 end (255,255)  start (224,224)  ops 32
+case014 motif S start / T end            score  256 end (31,255)   start (0,224)    ops 32
+case015 motif S end / T start            score  256 end (255,31)   start (224,0)    ops 32
+case016 single matching base             score    8 end (85,0)     start (85,0)     ops 1
+case017 tie: two equal hits in S         score  256 end (63,63)    start (32,32)    ops 32
+case018 tie: two equal hits in T         score  256 end (63,63)    start (32,32)    ops 32
+case019 tie: 2x2 equal hits              score  256 end (41,41)    start (10,10)    ops 32
+case020 long INS (gap in S)              score  573 end (143,164)  start (64,64)    ops 101
+case021 long DEL (gap in T)              score  573 end (164,143)  start (64,64)    ops 101
+case022 mixed short indels               score  944 end (159,159)  start (32,32)    ops 132
+case023 every 3rd base mismatch          score  123 end (95,95)    start (63,64)    ops 34
+case024 bridge over 3 mismatches         score  625 end (146,146)  start (64,64)    ops 83
+case025 all same base                    score 2048 end (255,255)  start (0,0)      ops 256
+case026 periodic AC vs CA                score 2040 end (254,255)  start (0,1)      ops 255
+case027 identical core, mutated ends     score 1938 end (250,249)  start (4,2)      ops 249
