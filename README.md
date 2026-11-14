@@ -2,6 +2,8 @@
 Software (Python golden model) and hardware (Verilog RTL) implementation of the
 Smith-Waterman local alignment algorithm with **affine gap penalty and traceback**.
 
+**Design report (algorithm, circuit diagrams, verification results): [report/REPORT.md](report/REPORT.md)**
+
 > The Smith–Waterman algorithm performs local sequence alignment; that is, for determining similar regions between two strings of nucleic acid sequences or protein sequences. Instead of looking at the entire sequence, the Smith–Waterman algorithm compares segments of all possible lengths and optimizes the similarity measure.
 > please check out wiki for more information: https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm
 
@@ -25,7 +27,7 @@ Tie-break rules (identical in Python and RTL, so the traceback can be checked op
 ## Software
 * `SW.py` – golden model (scoring + traceback), bit-exact with the RTL
   `python3 SW.py` aligns the demo sequences, `python3 SW.py --s a.dat --t b.dat` aligns pattern files
-* `gen_pattern.py` – generates `testbench/pattern/caseNN_{s,t,golden}.dat`
+* `gen_pattern.py` – generates `testbench/pattern/caseNNN_{s,t,golden}.dat` and `cases.txt`
   (`--length L`, `--random N` for stress tests, `--legacy s.dat t.dat` to include your own pairs)
 
 ## Hardware
@@ -71,9 +73,12 @@ vcs tb_SW.v +define+RTL       -full64 -R -debug_access+all +v2k +notimingcheck  
 vcs tb_SW.v +define+RTL+SW_v2 -full64 -R -debug_access+all +v2k +notimingcheck   # NUM_PE = 128
 # or with Icarus Verilog:
 sh run_iverilog.sh            # both configurations
-sh run_iverilog.sh stress     # + 60 random pairs each for L = 16..64, NUM_PE = 1..64
+sh run_iverilog.sh stress     # + random pairs for L = 16..64, NUM_PE = 1..64
+python3 run_regression.py     # full regression
 ```
-The testbench runs all cases back-to-back and checks score, end/start position, length and every traceback op.
+The testbench runs all 28 cases of `testbench/pattern` back-to-back (plus a reset-in-the-middle test) and checks score, end/start position, length and every traceback op.
+
+Full regression: `python3 run_regression.py` (29 configurations, 4,162 cases; summary in `testbench/regression_summary.md`). Golden-model cross-check: `python3 tools/validate_model.py` (needs biopython). Testbench sensitivity: `python3 tools/mutation_test.py`.
 
 ## Fixes compared to the previous version
 The old RTL passed its testbench only because `golden1.dat` / `golden2.dat` were produced by the same buggy

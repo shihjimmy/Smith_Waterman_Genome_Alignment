@@ -7,6 +7,8 @@
 //   +define+SW_v2          : NUM_PE = 128 (2 passes + recirculation buffer)
 //                            (default NUM_PE = 256, one pass)
 //   +define+FSDB           : dump waveform (Verdi)
+//   +define+VCD=\"x.vcd\"   : dump VCD (open-source viewers, e.g. GTKWave)
+//   (input must be contiguous: S[p] is broadcast to PE p exactly when PE p starts)
 //   +define+SEQ_L=<n> +define+NUM_PE=<p> +define+PAT_DIR=\"dir/\" +define+NCASE=<n>
 //                          : other configurations (see gen_pattern.py --length)
 //
@@ -15,12 +17,20 @@
 // against the golden model (SW.py / gen_pattern.py).
 //============================================================================
 `define clk_period 12
-`define END_CYCLE  200000
+`ifndef END_CYCLE
+    `define END_CYCLE 50000000   // global watchdog (each case also has its own)
+`endif
 `ifndef NCASE
-    `define NCASE 11
+    `define NCASE 1000         // upper limit; the case list ends at the first missing caseNNN_golden.dat
 `endif
 `ifndef SEQ_L
     `define SEQ_L 256
+`endif
+`ifndef RESULT_FILE
+    `define RESULT_FILE "tb_result.txt"
+`endif
+`ifndef OPS_FILE
+    `define OPS_FILE "tb_ops.txt"
 `endif
 `ifndef PAT_DIR
     `define PAT_DIR "pattern/"
@@ -63,8 +73,8 @@ module tb_SW;
     reg  [1:0]    seq_t [0:L-1];
     reg  [15:0]   gold  [0:2*L+8];
     reg  [1:0]    ops   [0:2*L+8];
-    integer       n_ops, ncase, i, err, case_err, total_err;
-    reg  [8*64-1:0] fname;
+    integer       n_ops, ncase, i, err, case_err, total_err, fd, fd_ops, fchk, gap_seed, n_pass, n_case;
+    reg  [8*256-1:0] fname;
 
 `ifdef SDF
     SW SW0 (
@@ -79,6 +89,10 @@ module tb_SW;
     initial begin
 `ifdef SDF
         $sdf_annotate(`SDFFILE, SW0);
+`endif
+`ifdef VCD
+        $dumpfile(`VCD);
+        $dumpvars(0, tb_SW);
 `endif
 `ifdef FSDB
         $fsdbDumpfile("SW.fsdb");
@@ -99,14 +113,22 @@ module tb_SW;
     task run_case(input integer c);
         integer cycles;
         begin
-            $sformat(fname, "%scase%02d_s.dat", `PAT_DIR, c);      $readmemh(fname, seq_s);
-            $sformat(fname, "%scase%02d_t.dat", `PAT_DIR, c);      $readmemh(fname, seq_t);
+            $sformat(fname, "%scase%03d_s.dat", `PAT_DIR, c);      $readmemh(fname, seq_s);
+            $sformat(fname, "%scase%03d_t.dat", `PAT_DIR, c);      $readmemh(fname, seq_t);
             for (i = 0; i < 2*L+9; i = i + 1) gold[i] = 16'hxxxx;
-            $sformat(fname, "%scase%02d_golden.dat", `PAT_DIR, c); $readmemh(fname, gold);
+            $sformat(fname, "%scase%03d_golden.dat", `PAT_DIR, c); $readmemh(fname, gold);
             n_ops = 0;
 
-            // stream S and T
+            // stream S and T (optionally with random idle cycles between inputs)
             for (i = 0; i < L; i = i + 1) begin
+`ifdef RAND_GAP
+                while (($random(gap_seed) & 3) == 0) begin
+                    @(negedge clk);
+                    valid  = 1'b0;
+                    data_s = $random(gap_seed);
+                    data_t = $random(gap_seed);
+                end
+`endif
                 @(negedge clk);
                 valid  = 1'b1;
                 data_s = seq_s[i];
@@ -119,9 +141,13 @@ module tb_SW;
 
             // wait for finish
             cycles = 0;
-            while (finish !== 1'b1) begin
+            while (finish !== 1'b1 && cycles < 16 * L + 64) begin
                 @(negedge clk);
                 cycles = cycles + 1;
+            end
+            if (finish !== 1'b1) begin
+                $display("case%03d TIMEOUT: no finish within %0d cycles", c, cycles);
+                total_err = total_err + 1;
             end
 
             case_err = 0;
@@ -136,8 +162,15 @@ module tb_SW;
                 if (ops[i] !== gold[6+i][1:0]) err = err + 1;
             case_err  = case_err + err;
             total_err = total_err + case_err;
+            if (case_err == 0) n_pass = n_pass + 1;
+            // hardware traceback ops (end -> start), for plotting the alignment path
+            $fwrite(fd_ops, "%0d %0d %0d %0d %0d ", c, end_i, end_j, start_i, start_j);
+            for (i = 0; i < n_ops; i = i + 1) $fwrite(fd_ops, "%0d", ops[i]);
+            $fwrite(fd_ops, "\n");
+            $fdisplay(fd, "%0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d", c, (case_err == 0),
+                      max, gold[0], end_i, end_j, start_i, start_j, n_ops, err, cycles);
 
-            $display("case%02d %s  score %4d/%4d  end (%3d,%3d)/(%3d,%3d)  start (%3d,%3d)/(%3d,%3d)  ops %3d/%3d (%0d op errors)  latency %0d cycles",
+            $display("case%03d %s  score %4d/%4d  end (%3d,%3d)/(%3d,%3d)  start (%3d,%3d)/(%3d,%3d)  ops %3d/%3d (%0d op errors)  latency %0d cycles",
                      c, (case_err == 0) ? "PASS" : "FAIL",
                      max, gold[0], end_i, end_j, gold[1], gold[2],
                      start_i, start_j, gold[3], gold[4], n_ops, gold[5], err, cycles);
@@ -148,6 +181,11 @@ module tb_SW;
     initial begin
         clk = 1'b0; reset = 1'b0; valid = 1'b0; data_s = 2'd0; data_t = 2'd0;
         total_err = 0;
+        n_pass    = 0;
+        gap_seed  = 1;
+        fd = $fopen(`RESULT_FILE);
+        fd_ops = $fopen(`OPS_FILE);
+        $fdisplay(fd, "# case pass score golden end_i end_j start_i start_j n_ops op_err latency");
         #(`clk_period)   reset = 1'b1;
         #(`clk_period*2) reset = 1'b0;
         #(`clk_period*2);
@@ -156,13 +194,43 @@ module tb_SW;
         $display(" SW  L = %0d  NUM_PE = %0d", L, `NUM_PE);
         $display("            yours/golden");
         $display("------------------------------------------------------------");
-        for (ncase = 0; ncase < `NCASE; ncase = ncase + 1)
-            run_case(ncase);
+        n_case = 0;
+        for (ncase = 0; ncase < `NCASE; ncase = ncase + 1) begin
+            $sformat(fname, "%scase%03d_golden.dat", `PAT_DIR, ncase);
+            fchk = $fopen(fname, "r");
+            if (fchk == 0)
+                ncase = `NCASE;                 // no more cases
+            else begin
+                $fclose(fchk);
+                run_case(ncase);
+                n_case = n_case + 1;
+            end
+        end
+
+        // reset-recovery test: abort a run in the middle of the scoring phase,
+        // check that nothing comes out, then run case 0 again
+        $display("--- reset in the middle of scoring, then re-run case00 ---");
+        for (i = 0; i < L; i = i + 1) begin
+            @(negedge clk);
+            valid = 1'b1; data_s = seq_s[i]; data_t = seq_t[i];
+        end
+        @(negedge clk) valid = 1'b0;
+        repeat (L / 2) @(negedge clk);
+        #(`clk_period/4) reset = 1'b1;
+        #(`clk_period)   reset = 1'b0;
+        repeat (4 * L) begin
+            @(negedge clk);
+            if (finish === 1'b1 || aln_valid === 1'b1) total_err = total_err + 1;
+        end
+        run_case(0);
+
         $display("------------------------------------------------------------");
         if (total_err == 0)
-            $display(" ALL %0d CASES PASS", `NCASE);
+            $display(" ALL %0d CASES PASS (+ reset recovery)", n_case);
         else
-            $display(" FAIL : %0d mismatches", total_err);
+            $display(" FAIL : %0d mismatches, %0d / %0d runs pass", total_err, n_pass, n_case + 1);
+        $fclose(fd);
+        $fclose(fd_ops);
         $display("------------------------------------------------------------");
         $finish;
     end
