@@ -172,7 +172,7 @@ if __name__ == "__main__":
     ap.add_argument("--length", type=int, default=256, help="sequence length L")
     ap.add_argument("--random", type=int, default=0, help="generate N random cases only (stress test)")
     ap.add_argument("--seed", type=int, default=2023)
-    ap.add_argument("--legacy", nargs="*", default=[], help="pairs of s/t .dat files to include first")
+    ap.add_argument("--pairs", nargs="*", default=[], help="pairs of s/t .dat files to include first")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     L = args.length
@@ -191,7 +191,7 @@ if __name__ == "__main__":
             else:
                 todo.append(("mutated", a, mutate(a, rng, rng.random() * 0.3, rng.random() * 0.2, rng.randint(1, 6))))
     else:
-        todo = [("legacy " + os.path.basename(args.legacy[k]), read_dat(args.legacy[k]), read_dat(args.legacy[k + 1]))
-                for k in range(0, len(args.legacy), 2)]
+        todo = [("sample " + os.path.basename(args.pairs[k]), read_dat(args.pairs[k]), read_dat(args.pairs[k + 1]))
+                for k in range(0, len(args.pairs), 2)]
         todo += typical_cases(rng) + directed_cases(rng, band)
     emit(out, todo, band)

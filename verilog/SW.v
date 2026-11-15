@@ -2,10 +2,10 @@
 // Smith-Waterman local alignment accelerator (affine gap) with traceback
 //
 //   * Linear systolic array of NUM_PE processing elements.
-//       NUM_PE == L      : one PE per row of S, a single pass        (old "SW")
+//       NUM_PE == L      : one PE per row of S, a single pass
 //       NUM_PE == L/2 ...: the array is reused for L/NUM_PE passes;
 //                          the bottom row of one pass is fed back to
-//                          PE0 through a (L-NUM_PE)-deep buffer       (old "SW_v2")
+//                          PE0 through a (L-NUM_PE)-deep buffer
 //   * Scoring : match +8, mismatch -5, gap open -7, gap extend -3
 //       E(i,j) = max(E(i,j-1)-3, H(i,j-1)-7)
 //       F(i,j) = max(F(i-1,j)-3, H(i-1,j)-7)

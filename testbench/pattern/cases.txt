@@ -1,5 +1,5 @@
-case000 legacy s1.dat                    score  593 end (245,255)  start (0,4)      ops 298
-case001 legacy s2.dat                    score  592 end (255,238)  start (0,1)      ops 289
+case000 sample s1.dat                    score  593 end (245,255)  start (0,4)      ops 298
+case001 sample s2.dat                    score  592 end (255,238)  start (0,1)      ops 289
 case002 identical                        score 2048 end (255,255)  start (0,0)      ops 256
 case003 all mismatch                     score    0 end (0,0)      start (1,1)      ops 0
 case004 unrelated random                 score  600 end (254,223)  start (6,2)      ops 283

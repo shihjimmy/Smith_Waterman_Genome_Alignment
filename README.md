@@ -28,7 +28,7 @@ Tie-break rules (identical in Python and RTL, so the traceback can be checked op
 * `SW.py` – golden model (scoring + traceback), bit-exact with the RTL
   `python3 SW.py` aligns the demo sequences, `python3 SW.py --s a.dat --t b.dat` aligns pattern files
 * `gen_pattern.py` – generates `testbench/pattern/caseNNN_{s,t,golden}.dat` and `cases.txt`
-  (`--length L`, `--random N` for stress tests, `--legacy s.dat t.dat` to include your own pairs)
+  (`--length L`, `--random N` for stress tests, `--pairs s.dat t.dat` to include your own pairs)
 
 ## Hardware
 One parameterized design, `verilog/SW.v`:
@@ -79,18 +79,5 @@ python3 run_regression.py     # full regression
 The testbench runs all 28 cases of `testbench/pattern` back-to-back (plus a reset-in-the-middle test) and checks score, end/start position, length and every traceback op.
 
 Full regression: `python3 run_regression.py` (29 configurations, 4,162 cases; summary in `testbench/regression_summary.md`). Golden-model cross-check: `python3 tools/validate_model.py` (needs biopython). Testbench sensitivity: `python3 tools/mutation_test.py`.
-
-## Fixes compared to the previous version
-The old RTL passed its testbench only because `golden1.dat` / `golden2.dat` were produced by the same buggy
-hardware (590 / 586, correct scores are **593 / 592**). Problems found:
-1. `finish`/`max` were latched one cycle too early: the best cell (PE245, column 255) had not yet propagated through
-   the max chain to PE255 → 590 instead of 593.
-2. `H` was not clamped at 0, so it was not a local alignment (negative cells; e.g. 637 instead of 638 on another pattern).
-3. E / F boundaries were initialized to 0 instead of -∞.
-4. `9'd256` overflows (truncated to 0 by some simulators), which breaks the PE `stop` condition.
-5. 12-bit signed scores overflow for 256 matches (2048).
-6. SW_v2: all cells of pass 0 were right, but the second pass is wrong from its very first column (row 129, column 0: 5 instead of 8)
-   because the PEs were reused without resetting the left / diagonal registers left over from the previous row → 586 instead of 592.
-7. `SW.py` used a linear gap model with different scores, so it could not produce the golden data.
 
 Synthesis results are not included in this repository.

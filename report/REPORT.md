@@ -202,8 +202,8 @@ testbench 另外包含：
 
 | case | 測資 | 分數 | 終點 (i,j) | 起點 (i,j) | 運算數 | 256 PE | 128 PE | 64 PE | 32 PE |
 |---|---|---|---|---|---|---|---|---|---|
-| 000 | legacy s1.dat | 593 | (245,255) | (0,4) | 298 | ✓ | ✓ | ✓ | ✓ |
-| 001 | legacy s2.dat | 592 | (255,238) | (0,1) | 289 | ✓ | ✓ | ✓ | ✓ |
+| 000 | sample s1.dat | 593 | (245,255) | (0,4) | 298 | ✓ | ✓ | ✓ | ✓ |
+| 001 | sample s2.dat | 592 | (255,238) | (0,1) | 289 | ✓ | ✓ | ✓ | ✓ |
 | 002 | identical | 2048 | (255,255) | (0,0) | 256 | ✓ | ✓ | ✓ | ✓ |
 | 003 | all mismatch | 0 | (0,0) | (1,1) | 0 | ✓ | ✓ | ✓ | ✓ |
 | 004 | unrelated random | 600 | (254,223) | (6,2) | 283 | ✓ | ✓ | ✓ | ✓ |
@@ -337,7 +337,7 @@ case020 中長度 21 的 INS 在路徑上是一段水平線（只有 j 減少）
 
 ```
 SW.py                    golden model（python3 SW.py --s a.dat --t b.dat 可直接比對）
-gen_pattern.py           產生測資與 golden（--length, --random, --legacy）
+gen_pattern.py           產生測資與 golden（--length, --random, --pairs）
 verilog/SW.v             RTL：SW（top）、SW_PE、SW_traceback
 testbench/tb_SW.v        testbench（+define+SW_v2、SEQ_L、NUM_PE、PAT_DIR、RAND_GAP、VCD、FSDB）
 testbench/pattern/       regression set（28 組）與 cases.txt

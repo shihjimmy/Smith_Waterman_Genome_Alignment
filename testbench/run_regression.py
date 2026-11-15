@@ -56,7 +56,7 @@ def run(cfg):
     if pat_args:
         gen += pat_args
     elif L == 256:
-        gen += ["--legacy", os.path.join(HERE, "pattern", "case000_s.dat"), os.path.join(HERE, "pattern", "case000_t.dat")]
+        gen += ["--pairs", os.path.join(HERE, "pattern", "case000_s.dat"), os.path.join(HERE, "pattern", "case000_t.dat")]
         if not BANDED:
             gen += [os.path.join(HERE, "pattern", "case001_s.dat"), os.path.join(HERE, "pattern", "case001_t.dat")]
     subprocess.run(gen, check=True, stdout=subprocess.DEVNULL)
