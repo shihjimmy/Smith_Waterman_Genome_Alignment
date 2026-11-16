@@ -7,6 +7,30 @@ Smith-Waterman local alignment algorithm with **affine gap penalty and traceback
 > The Smith–Waterman algorithm performs local sequence alignment; that is, for determining similar regions between two strings of nucleic acid sequences or protein sequences. Instead of looking at the entire sequence, the Smith–Waterman algorithm compares segments of all possible lengths and optimizes the similarity measure.
 > please check out wiki for more information: https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm
 
+## Scope: a single-tile accelerator
+This design aligns **one tile**: a query `S` and a reference `T` of exactly the same length `L` (a compile-time
+parameter, default 256), computing the full `L x L` matrix and producing the complete local alignment of that tile.
+`L` *is* the tile size, so choose it for your application; the cost grows quickly with it:
+
+| `L` (tile size) | score width | pointer memory (4·L² bit) | relative to L = 256 |
+|---:|---:|---:|---:|
+| 64 | 11 bit | 16,384 bit (2 KiB) | 0.0625x |
+| 128 | 12 bit | 65,536 bit (8 KiB) | 0.25x |
+| 256 | 13 bit | 262,144 bit (32 KiB) | 1x |
+| 512 | 14 bit | 1,048,576 bit (128 KiB) | 4x |
+| 1024 | 15 bit | 4,194,304 bit (512 KiB) | 16x |
+| 2048 | 16 bit | 16,777,216 bit (2 MiB) | 64x |
+
+The pointer memory grows with **L²** (doubling `L` quadruples it); the number of PEs (`NUM_PE`, a divisor of `L`)
+trades area for latency. Only `L` = 4 … 256 has been simulated; larger values follow from the same parameterization
+but are not verified.
+
+In real workloads `S` and `T` are usually similar, so the alignment lies close to the main diagonal. Long sequences are
+therefore meant to be cut into tiles along the diagonal and the per-tile results chained together. **This repository
+only implements the single tile.** Chaining the tiles is *not* handled: passing the boundary state (H / E / F) between
+neighbouring tiles, merging the best scores and concatenating the traceback paths have to be done outside this module.
+Inputs must have exactly `L` bases; shorter sequences have to be padded and different lengths are not supported.
+
 ## Scoring
 | | |
 |---|---|
